@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use ExtUtils::MakeMaker;
-use Git::Wrapper;
 
 WriteMakefile(
 
@@ -30,6 +29,8 @@ WriteMakefile(
 # --
 # Writing 'Changes' file from Git
 # --
+
+use Git::Wrapper;
 
 my $git = new Git::Wrapper( $ENV{PWD} );
 
