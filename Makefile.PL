@@ -5,14 +5,18 @@ use ExtUtils::MakeMaker;
 use Git::Wrapper;
 
 WriteMakefile(
-    NAME          => 'NFS::Watchdog',
-    AUTHOR        => 'Otavio Fernandes <otaviof@gmail.com>',
-    VERSION_FROM  => 'lib/NFS/Watchdog.pm',
-    ABSTRACT_FROM => 'lib/NFS/Watchdog.pm',
-    EXE_FILES     => [ 'bin/nfs_watchdog.pl', ],
-    PREREQ_PM     => {
-        'Test::More'   => 0,
+
+    # ABSTRACT_FROM => 'lib/NFS/Watchdog.pm',
+
+    NAME         => 'NFS::Watchdog',
+    AUTHOR       => 'Otavio Fernandes <otaviof@gmail.com>',
+    VERSION_FROM => 'lib/NFS/Watchdog.pm',
+    EXE_FILES    => [ 'bin/nfs_watchdog.pl', ],
+    PREREQ_PM    => {
+        'AnyEvent'     => 5.251,
         'Git::Wrapper' => 0.006,
+        'Moose'        => 1.01,
+        'Test::More'   => 0,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
