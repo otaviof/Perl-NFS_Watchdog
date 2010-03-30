@@ -23,10 +23,22 @@ WriteMakefile(
         : () ),
 );
 
+# --
+# Writing 'Changes' file from Git
+# --
+
 my $git = new Git::Wrapper( $ENV{PWD} );
 
-open( my $CHG, '<', 'Changes' ) or die $!;
-print $CHG for $git->log;
+unlink 'Changes' if ( -f 'Changes' );
+
+open( my $CHG, '>', 'Changes' ) or die $!;
+foreach my $log ( $git->log ) {
+    print $CHG "commit: ", $log->id, "\n";
+    print $CHG "Author: ", $log->attr->{date},   "\n";
+    print $CHG "  Date: ", $log->attr->{author}, "\n\n";
+    print $CHG "\t", $log->message, "\n\n";
+
+}
 close($CHG);
 
 __END__

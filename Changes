@@ -1,5 +1,7 @@
-Revision history for NFS-Watchdog
+commit: 457069c29dcc55166c049ae1fb126bd4e383c32d
+Author: Mon Mar 29 15:25:04 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+	initial version
+
 
