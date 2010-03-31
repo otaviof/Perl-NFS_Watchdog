@@ -6,11 +6,19 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use NFS::Watchdog;
 
+my $watchdog = new NFS::Watchdog( { nfs_dir => '/tmp' } )
+    or die $!;
 
+ok( $watchdog->write(), "Should Pass, write method exists" );
 
+my $file = $watchdog->write();
+
+ok( -f $file, "Should Pass, writed file must exist" );
+
+# unlink($file);
 
 __END__
