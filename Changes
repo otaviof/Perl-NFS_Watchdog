@@ -1,3 +1,10 @@
+commit: 916c48afb921e421a5cb41a8f339853c1db86f42
+Author: Thu Apr 1 00:10:33 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	write assync method is working pretty well
+
+
 commit: fc1eb51008e236b449b9eb88cb56867d39bc34d0
 Author: Wed Mar 31 23:01:24 2010 -0300
   Date: Otvio Fernandes <otaviof@gmail.com>

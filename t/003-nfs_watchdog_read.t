@@ -1,6 +1,6 @@
 #
 #  Author: Otavio Fernandes <otaviof@gmail.com>
-# Created: 03/30/2010 18:48:27
+# Created: 04/01/2010 00:12:22
 #
 
 use strict;
@@ -13,11 +13,12 @@ use NFS::Watchdog;
 my $watchdog = new NFS::Watchdog( { nfs_dir => '/tmp' } )
     or die $!;
 
-ok( $watchdog->write(), "Should Pass, write method exists." );
-
 my $file = $watchdog->write();
 
 ok( -f $file, "Should Pass, written file must exist." );
+
+ok( $watchdog->read($file),
+    "Should Pass, we must read an existent file from FS." );
 
 unlink($file);
 
