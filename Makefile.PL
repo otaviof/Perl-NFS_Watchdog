@@ -12,10 +12,12 @@ WriteMakefile(
     VERSION_FROM => 'lib/NFS/Watchdog.pm',
     EXE_FILES    => [ 'bin/nfs_watchdog.pl', ],
     PREREQ_PM    => {
-        'AnyEvent'     => 5.251,
-        'Git::Wrapper' => 0.006,
-        'Moose'        => 1.01,
-        'Test::More'   => 0,
+        'AnyEvent'      => 5.251,
+        'AnyEvent::AIO' => 1.1,
+        'EV'            => 3.9,
+        'Git::Wrapper'  => 0.006,
+        'Moose'         => 1.01,
+        'Test::More'    => 0,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

@@ -17,7 +17,10 @@ ok( $watchdog->write(), "Should Pass, write method exists" );
 
 my $file = $watchdog->write();
 
-ok( -f $file, "Should Pass, writed file must exist" );
+print "Debug -> path #", $file, "#\n";
+print "Debug -> file #", $file, "#\n" if ( -f $file );
+
+ok( ( -f $file ) ? 1 : 0, "Should Pass, writed file must exist" );
 
 # unlink($file);
 

@@ -1,3 +1,10 @@
+commit: 279ce3632fd17b61c7d09b6b1f4f730aebfb8c01
+Author: Wed Mar 31 00:16:39 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	starting to work with 'write' method, besides, there's tests for it
+
+
 commit: 25ba5583f3eff51856e2d0ca09b2d69865d070a2
 Author: Tue Mar 30 20:26:33 2010 -0300
   Date: Otvio Fernandes <otaviof@gmail.com>

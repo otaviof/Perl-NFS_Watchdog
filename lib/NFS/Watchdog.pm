@@ -12,6 +12,9 @@ our $VERSION = '0.01';
 
 use Moose;
 use AnyEvent;
+use AnyEvent::AIO;
+use IO::AIO;
+use Fcntl;
 
 has 'nfs_dir' => (
     is       => 'rw',
@@ -33,31 +36,30 @@ has 'nfs_dir' => (
 
 sub write {
     my ( $self, $size ) = @_;
-    use Data::Dumper;    # Debug
     my $path = $self->nfs_dir . '/' . rand(10) . '.tmp';
+    aio_open $path, O_RDWR | O_CREAT | O_EXCL, 0644, sub {
+        my $fh = shift
+            or die "Cannot open: $!";
+        aio_write $fh, 0, 1, "1", 0, sub {
+            $_[0] > 0 or die "Write Error: $!";
+            aio_close $fh, sub {
+                print "Debug -> aio_close #", ( Dumper $_), "#\n" if ($_);
+            };
+        };
+    };
 
-    print "Debug -> path #", $path, "#\n";
-    # my $w_ready = AnyEvent->condvar;
+=cut
+    use Data::Dumper;
 
-    open( my $fh, '>', $path ) or die $!;
+    for ( 1 .. 5 ) {
+        my $stat = 0;
+        aio_lstat $path, sub {
+            print "Debug -> aio_stat #", ( Dumper $_), "#\n";
+        };
+        sleep 1;
+    }
+=cut
 
-    return;
-
-    my $w;
-    $w = AnyEvent->io(
-        fh   => $fh,
-        poll => "w",
-        cb   => sub {
-            print $w "test\n";
-            #     $w_ready->send;
-        },
-    );
-
-    # print "Debug -> w #",       Dumper $w,       "#\n";
-    # print "Debug -> w_ready #", Dumper $w_ready, "#\n";
-
-    # sleep 2 and undef $w_ready;
-    # return if ( !$w );
     return $path;
 }
 
