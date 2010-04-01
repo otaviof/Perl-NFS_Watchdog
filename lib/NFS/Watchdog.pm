@@ -13,7 +13,7 @@ our $VERSION = '0.01';
 use Moose;
 use AnyEvent;
 use AnyEvent::AIO;
-use IO::AIO;
+use IO::AIO 2;
 use Fcntl;
 
 has 'nfs_dir' => (
@@ -34,32 +34,28 @@ has 'nfs_dir' => (
     },
 );
 
+$|++;
+
 sub write {
     my ( $self, $size ) = @_;
     my $path = $self->nfs_dir . '/' . rand(10) . '.tmp';
-    aio_open $path, O_RDWR | O_CREAT | O_EXCL, 0644, sub {
+
+    my $req = aio_open $path, O_RDWR | O_CREAT, 0644, sub {
         my $fh = shift
             or die "Cannot open: $!";
+
         aio_write $fh, 0, 1, "1", 0, sub {
-            $_[0] > 0 or die "Write Error: $!";
+            die "Cannot write: $!"
+                if ( !$_[0] );
+
             aio_close $fh, sub {
-                print "Debug -> aio_close #", ( Dumper $_), "#\n" if ($_);
+                die "Cannot close: $!"
+                    if ( $_[0] );
             };
         };
     };
 
-=cut
-    use Data::Dumper;
-
-    for ( 1 .. 5 ) {
-        my $stat = 0;
-        aio_lstat $path, sub {
-            print "Debug -> aio_stat #", ( Dumper $_), "#\n";
-        };
-        sleep 1;
-    }
-=cut
-
+    sleep 2 and $req->cancel;
     return $path;
 }
 
