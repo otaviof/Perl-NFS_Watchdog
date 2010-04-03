@@ -1,3 +1,10 @@
+commit: 64d18374eb2b302ac11473b1542efbfa101bbd2e
+Author: Thu Apr 1 00:42:50 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	tests and method for assync reading
+
+
 commit: 916c48afb921e421a5cb41a8f339853c1db86f42
 Author: Thu Apr 1 00:10:33 2010 -0300
   Date: Otávio Fernandes <otaviof@gmail.com>

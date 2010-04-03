@@ -34,8 +34,6 @@ has 'nfs_dir' => (
     },
 );
 
-$|++;
-
 sub write {
     my ($self) = @_;
     my $path = $self->nfs_dir . '/' . rand(10) . '.tmp';
@@ -43,11 +41,9 @@ sub write {
     my $req = aio_open $path, O_RDWR | O_CREAT, 0644, sub {
         my $fh = shift
             or die "Cannot open: $!";
-
         aio_write $fh, 0, 1, "1", 0, sub {
             die "Cannot write: $!"
                 if ( !$_[0] );
-
             aio_close $fh, sub {
                 die "Cannot close: $!"
                     if ( $_[0] );

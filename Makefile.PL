@@ -15,9 +15,10 @@ WriteMakefile(
         'AnyEvent'      => 5.251,
         'AnyEvent::AIO' => 1.1,
         'EV'            => 3.9,
+        'Getopt::Long'  => 2.37,
         'Git::Wrapper'  => 0.006,
         'Moose'         => 1.01,
-        'Test::More'    => 0,
+        'Test::More'    => 0.94,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
