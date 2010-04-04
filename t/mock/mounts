@@ -1,0 +1,16 @@
+rootfs / rootfs rw 0 0
+none /sys sysfs rw,nosuid,nodev,noexec,relatime 0 0
+none /proc proc rw,nosuid,nodev,noexec,relatime 0 0
+udev /dev tmpfs rw,relatime,mode=755 0 0
+/dev/disk/by-uuid/2e60b3de-f48e-4144-80af-476dba34ace9 / ext4 rw,relatime,errors=remount-ro,barrier=1,data=ordered 0 0
+none /sys/kernel/security securityfs rw,relatime 0 0
+none /sys/fs/fuse/connections fusectl rw,relatime 0 0
+none /sys/kernel/debug debugfs rw,relatime 0 0
+none /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0
+none /dev/shm tmpfs rw,nosuid,nodev,relatime 0 0
+none /var/run tmpfs rw,nosuid,relatime,mode=755 0 0
+none /var/lock tmpfs rw,nosuid,nodev,noexec,relatime 0 0
+none /lib/init/rw tmpfs rw,nosuid,relatime,mode=755 0 0
+.host:/ /mnt/hgfs vmhgfs rw,relatime 0 0
+none /proc/fs/vmblock/mountPoint vmblock rw,relatime 0 0
+bsd:/home/nfs /mnt/bsd nfs rw,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=172.16.34.128,mountvers=3,mountproto=tcp,addr=172.16.34.128 0 0
