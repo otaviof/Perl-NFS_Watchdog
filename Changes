@@ -1,3 +1,17 @@
+commit: 83e4e4da71b99589589f7f814f52301655290103
+Author: Sun Apr 4 19:04:10 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	adding tests of the last feature
+
+
+commit: a98df0adbee8f9af9ca58e4ca01881187cd6a8d0
+Author: Sun Apr 4 19:03:40 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	parsing NFS mount points from mounts file, incluind all tets need for that.
+
+
 commit: 609ed25d5ac973e23f52b8a92b82b19954cc507a
 Author: Sat Apr 3 09:51:43 2010 -0300
   Date: Otávio Fernandes <otaviof@gmail.com>

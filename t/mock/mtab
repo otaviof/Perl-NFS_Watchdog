@@ -1,0 +1,15 @@
+/dev/sda1 / ext4 rw,errors=remount-ro 0 0
+proc /proc proc rw 0 0
+none /sys sysfs rw,noexec,nosuid,nodev 0 0
+none /sys/fs/fuse/connections fusectl rw 0 0
+none /sys/kernel/debug debugfs rw 0 0
+none /sys/kernel/security securityfs rw 0 0
+udev /dev tmpfs rw,mode=0755 0 0
+none /dev/pts devpts rw,noexec,nosuid,gid=5,mode=0620 0 0
+none /dev/shm tmpfs rw,nosuid,nodev 0 0
+none /var/run tmpfs rw,nosuid,mode=0755 0 0
+none /var/lock tmpfs rw,noexec,nosuid,nodev 0 0
+none /lib/init/rw tmpfs rw,nosuid,mode=0755 0 0
+.host:/ /mnt/hgfs vmhgfs rw,ttl=1 0 0
+none /proc/fs/vmblock/mountPoint vmblock rw 0 0
+bsd:/home/nfs /mnt/bsd nfs rw,addr=172.16.34.128 0 0

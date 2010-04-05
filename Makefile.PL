@@ -12,13 +12,15 @@ WriteMakefile(
     VERSION_FROM => 'lib/NFS/Watchdog.pm',
     EXE_FILES    => [ 'bin/nfs_watchdog.pl', ],
     PREREQ_PM    => {
-        'AnyEvent'      => 5.251,
-        'AnyEvent::AIO' => 1.1,
-        'EV'            => 3.9,
-        'Getopt::Long'  => 2.37,
-        'Git::Wrapper'  => 0.006,
-        'Moose'         => 1.01,
-        'Test::More'    => 0.94,
+        'AnyEvent'       => 5.251,
+        'AnyEvent::AIO'  => 1.1,
+        'AnyEvent::Util' => 0,
+        'EV'             => 3.9,
+        'Getopt::Long'   => 2.37,
+        'Git::Wrapper'   => 0.006,
+        'Moose'          => 1.01,
+        'Sys::Syslog'    => 0.22,
+        'Test::More'     => 0.94,
     },
 
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
@@ -45,7 +47,6 @@ foreach my $log ( $git->log ) {
     print $CHG "Author: ", $log->attr->{date},   "\n";
     print $CHG "  Date: ", $log->attr->{author}, "\n\n";
     print $CHG "\t", $log->message, "\n\n";
-
 }
 close($CHG);
 
