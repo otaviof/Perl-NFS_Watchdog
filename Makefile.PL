@@ -16,6 +16,8 @@ WriteMakefile(
         'AnyEvent::AIO'  => 1.1,
         'AnyEvent::Util' => 0,
         'EV'             => 3.9,
+        'File::Copy'     => 2.13,
+        'File::Slurp'    => 9999.13,
         'Getopt::Long'   => 2.37,
         'Git::Wrapper'   => 0.006,
         'Moose'          => 1.01,
