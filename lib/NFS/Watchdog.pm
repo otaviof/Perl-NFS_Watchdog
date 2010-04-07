@@ -75,6 +75,13 @@ sub read {
     return 1;
 }
 
+sub unlink {
+    my ( $self, $path ) = @_;
+    my $req = aio_unlink $path, sub { };
+    sleep 2 and $req->cancel;
+    return 1;
+}
+
 1;
 
 __END__
