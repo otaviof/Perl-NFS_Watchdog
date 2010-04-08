@@ -1,3 +1,10 @@
+commit: 85f6d57888b4f2631a098c0cea227b59bd11d68b
+Author: Mon Apr 5 13:58:27 2010 -0300
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	adding dependencies on Makefile.PL
+
+
 commit: 2fe7129534a03f55463de975861a1a69f44b00cc
 Author: Mon Apr 5 13:53:48 2010 -0300
   Date: Otávio Fernandes <otaviof@gmail.com>

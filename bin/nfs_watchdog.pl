@@ -9,33 +9,17 @@ use strict;
 use warnings;
 
 use English;
+
 use Getopt::Long;
 use NFS::Watchdog::Utils;
 use NFS::Watchdog;
+use Net::Ping::External qw(ping);
 use Sys::Syslog;
 
-# die "In this version, just is supported Linux. Sorry."
-#     if ( $OSNAME !~ /linux/i );
+die "In this version, just is supported Linux. Sorry."
+    if ( $OSNAME !~ /linux/i );
 
-# ---------------------------------------------------------------------------
-#
-# -- TODO --
-#
-# * we must be shure that just only one process is running!
-# * remember Try::Tiny!;
-# * --help option;
-# * logging actions and NFS feedbacks on syslog (if user inform this option
-#   in command line);
-# * option for execute umount;
-# * option for execute umount in a very forced way;
-# * perldoc!;
-#
-# Give an user option, just to return an error code, instead runing some
-# fucking executable.
-#
-# ---------------------------------------------------------------------------
-
-my ( $execute, $force, $ping, $syslog, $umount, $verbose, );
+my ( $execute, $force, $ping, $syslog, $umount );
 
 GetOptions(
     "execute=s" => \$execute,
@@ -43,23 +27,27 @@ GetOptions(
     "ping"      => \$ping,
     "syslog"    => \$syslog,
     "umount"    => \$umount,
-    "verbose"   => \$verbose,
 ) or die "Cannot parse command line arguments with Getopt::Long";
 
 die "Your informed exec script does not exists or isnt executable."
     if ( $execute and !-x $execute );
 
 # ---------------------------------------------------------------------------
-#
-# Software Loop:
-#
-#   Test ping
-#   Test Write
-#   Test Read
-#
-#       If any of this tests fail, should umount volume (using an assync
-#       method) and execute script
-#
+#                              -- Subroutines --
+# ---------------------------------------------------------------------------
+
+sub final_action {
+    my ($point) = @_;
+    print "Debug ->>>> ping #", $ping,    "#\n";
+    print "Debug ->>> force #", $force,   "#\n";
+    print "Debug ->>> point #", $point,   "#\n";
+    print "Debug ->> syslog #", $syslog,  "#\n";
+    print "Debug ->> umount #", $umount,  "#\n";
+    print "Debug -> execute #", $execute, "#\n";
+}
+
+# ---------------------------------------------------------------------------
+#                                  -- Main --
 # ---------------------------------------------------------------------------
 
 my $utils = new NFS::Watchdog::Utils()
@@ -73,22 +61,51 @@ openlog( __FILE__, 'nowait,pid', LOG_USER )
 
 foreach my $mount ( @{$nfs_mounts} ) {
 
-    if ( $mount->{type} ne 'rw' ) {
+    syslog( 'info', "NFS mount point (%s) type: %s.",
+        $mount->{origin}, $mount->{type} )
+        if ($syslog);
 
+    #
+    # Ping Test
+    #
+
+    if ($ping
+        and !ping(
+            hostname => $mount->{server},
+            count    => 5,
+            size     => 1024,
+            timeout  => 3
+        )
+        )
+    {
+        syslog( 'info', "Ping error for server (%s).", $mount->{server} )
+            if ($syslog);
+        final_action( $mount->{server} );
+        next;
     }
-    syslog( 'info', "NFS mount point (%s) is just for reading.",
-        $mount->{origin} );
+
+    next if ( $mount->{type} ne 'rw' );
 
     #
-    # if nfs mount point is just for read, we must test only ping
+    # Read/Write Tests
     #
 
-    use Data::Dumper;    # Debug
-    print "Debug -> mount #", ( Dumper $mount ), "#\n";
+    my $watchdog = new NFS::Watchdog( { nfs_dir => $mount->{destination} } )
+        or $!;
 
-    #
-    # Umount must turn into a Module ( with Tests ofcourse )
-    #
+    my $file = $watchdog->write();
+
+    syslog( 'info', "Test file path: %s.", $file )
+        if ($syslog);
+
+    next if ( $file and $watchdog->read($file) );
+
+    syslog( 'info', "Read/Write error for %s", $mount->{destination} )
+        if ($syslog);
+
+    $watchdog->unlink($file);
+
+    final_action( $mount->{server} );
 
 }
 
