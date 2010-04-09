@@ -27,6 +27,7 @@ eval {
 
 ok( !$w2, "Should Fail, directory doesn't exists." );
 
-new_ok( 'NFS::Watchdog', [ { nfs_dir => '/tmp' } ] );
+new_ok( 'NFS::Watchdog',
+    [ { nfs_dir => ( ( $ENV{NFS_DIR} ) ? $ENV{NFS_DIR} : '/tmp' ) } ] );
 
 __END__

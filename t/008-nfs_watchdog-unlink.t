@@ -10,7 +10,9 @@ use Test::More tests => 3;
 
 use NFS::Watchdog;
 
-my $watchdog = new NFS::Watchdog( { nfs_dir => '/tmp' } )
+my $watchdog
+    = new NFS::Watchdog(
+    { nfs_dir => ( ( $ENV{NFS_DIR} ) ? $ENV{NFS_DIR} : '/tmp' ) } )
     or die $!;
 
 my $file = $watchdog->write();
