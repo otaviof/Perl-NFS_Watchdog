@@ -56,7 +56,7 @@ my $utils = new NFS::Watchdog::Utils()
 my $nfs_mounts = $utils->parse_nfs_from_mounts()
     or die "Cannot parse NFS mount points.";
 
-openlog( __FILE__, 'nowait,pid', LOG_USER )
+openlog( __FILE__, 'nowait,pid', 'LOG_USER' )
     if ($syslog);
 
 foreach my $mount ( @{$nfs_mounts} ) {
@@ -65,9 +65,9 @@ foreach my $mount ( @{$nfs_mounts} ) {
         $mount->{origin}, $mount->{type} )
         if ($syslog);
 
-    #
+    # -----------------------------------------------------------------------
     # Ping Test
-    #
+    # -----------------------------------------------------------------------
 
     if ($ping
         and !ping(
@@ -86,19 +86,19 @@ foreach my $mount ( @{$nfs_mounts} ) {
 
     next if ( $mount->{type} ne 'rw' );
 
-    #
+    # -----------------------------------------------------------------------
     # Read/Write Tests
-    #
+    # -----------------------------------------------------------------------
 
     my $watchdog = new NFS::Watchdog( { nfs_dir => $mount->{destination} } )
-        or $!;
+        or ( warn "Warning: $!" and next );
 
     my $file = $watchdog->write();
 
     syslog( 'info', "Test file path: %s.", $file )
         if ($syslog);
 
-    next if ( $file and $watchdog->read($file) );
+    next if ( $file and !$watchdog->read($file) );
 
     syslog( 'info', "Read/Write error for %s", $mount->{destination} )
         if ($syslog);

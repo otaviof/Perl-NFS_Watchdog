@@ -22,4 +22,6 @@ ok( $watchdog->unlink($file),
 
 ok( !-f $file, "Should Fail, file must not exists anymore." );
 
+unlink($file) if ( -f $file );
+
 __END__

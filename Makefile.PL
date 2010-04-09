@@ -15,7 +15,8 @@ WriteMakefile(
     PREREQ_PM => {
         'AnyEvent'            => 5.251,
         'AnyEvent::AIO'       => 1.1,
-        'AnyEvent::Util'      => 5.251,
+        'AnyEvent::Util'      => 0,
+        'Coro::AIO'           => 5.21,
         'EV'                  => 3.9,
         'File::Copy'          => 2.13,
         'File::Slurp'         => 9999.13,
