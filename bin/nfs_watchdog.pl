@@ -15,6 +15,9 @@ use NFS::Watchdog::Utils;
 use NFS::Watchdog;
 use Net::Ping::External qw(ping);
 use Sys::Syslog;
+use Try::Tiny;
+
+use Data::Dumper;    # Debug
 
 die "In this version, just is supported Linux. Sorry."
     if ( $OSNAME !~ /linux/i );
@@ -31,6 +34,8 @@ GetOptions(
 
 die "Your informed exec script does not exists or isnt executable."
     if ( $execute and !-x $execute );
+
+$SIG{ALRM} = sub { print Dumper @_; };
 
 # ---------------------------------------------------------------------------
 #                              -- Subroutines --
@@ -61,13 +66,13 @@ openlog( __FILE__, 'nowait,pid', 'LOG_USER' )
 
 foreach my $mount ( @{$nfs_mounts} ) {
 
-    syslog( 'info', "NFS mount point (%s) type: %s.",
-        $mount->{origin}, $mount->{type} )
+    syslog( 'info', "NFS mount point '%s' to '%s' type: '%s'.",
+        $mount->{origin}, $mount->{destination}, $mount->{type} )
         if ($syslog);
 
-    # -----------------------------------------------------------------------
+    #
     # Ping Test
-    # -----------------------------------------------------------------------
+    #
 
     if ($ping
         and !ping(
@@ -78,7 +83,7 @@ foreach my $mount ( @{$nfs_mounts} ) {
         )
         )
     {
-        syslog( 'info', "Ping error for server (%s).", $mount->{server} )
+        syslog( 'info', "Ping error for server '%s'.", $mount->{server} )
             if ($syslog);
         final_action( $mount->{server} );
         next;
@@ -86,24 +91,32 @@ foreach my $mount ( @{$nfs_mounts} ) {
 
     next if ( $mount->{type} ne 'rw' );
 
-    # -----------------------------------------------------------------------
+    #
     # Read/Write Tests
-    # -----------------------------------------------------------------------
+    #
 
-    my $watchdog = new NFS::Watchdog( { nfs_dir => $mount->{destination} } )
-        or ( warn "Warning: $!" and next );
+    my $watchdog = try {
+        new NFS::Watchdog( { nfs_dir => $mount->{destination} } );
+    }
+    catch {
+        syslog( 'info', "new NFS::Watchdog: '%s'.", $_ )
+            if ($syslog);
+        use Data::Dumper;    # Debug
+        print "Debug -> \$_ #", ( Dumper $_ ), "#\n";
+        next;
+    };
 
     my $file = $watchdog->write();
 
-    syslog( 'info', "Test file path: %s.", $file )
+    syslog( 'info', "Test file path: '%s'.", $file )
         if ($syslog);
 
-    next if ( $file and !$watchdog->read($file) );
+    next if ( $file
+        and $watchdog->read($file)
+        and $watchdog->unlink($file) );
 
-    syslog( 'info', "Read/Write error for %s", $mount->{destination} )
+    syslog( 'info', "Read/Write error for '%s'.", $mount->{destination} )
         if ($syslog);
-
-    $watchdog->unlink($file);
 
     final_action( $mount->{server} );
 

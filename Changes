@@ -1,3 +1,10 @@
+commit: a2a7531cd96cc2df821a12840a7fdbec16e0cd7f
+Author: Fri Apr 9 18:57:59 2010 -0300
+  Date: Otvio Fernandes <otaviof@gmail.com>
+
+	refactoring IO Async to using Coro::AIO (is a way better), and working to apply modules into a real NFS testing
+
+
 commit: c1d631a9a4990737218b1fdc3592bae21ba32159
 Author: Wed Apr 7 23:32:19 2010 -0300
   Date: Otvio Fernandes <otaviof@gmail.com>

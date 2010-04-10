@@ -21,15 +21,17 @@ has 'nfs_dir' => (
     required => 1,
     trigger  => sub {
         my ( $self, $dir ) = @_;
-        my $opendir_ready = AnyEvent->condvar;
-        my $opendir       = AnyEvent->io(
-            fh   => $dir,
-            poll => "r",
-            cb   => sub { $opendir_ready->send; }
-        );
-        sleep 2 and undef $opendir_ready;
-        return if ( !$opendir );
-        return 1;
+        my $return_code = 0;
+        eval {
+            local $SIG{ALRM} = sub { die "Readdir Timeout\n" };
+            alarm 3;
+
+            $return_code = 1
+                if ( aio_readdir $dir);
+
+            alarm 0;
+        };
+        return $return_code;
     },
 );
 
